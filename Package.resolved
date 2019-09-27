@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "LogModel",
+        "repositoryURL": "https://github.com/PDF-Archiver/LogModel.git",
+        "state": {
+          "branch": null,
+          "revision": "2274d4044dbae36cfaa7b95b04069db7ef4601a7",
+          "version": "0.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
