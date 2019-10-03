@@ -60,6 +60,9 @@ public struct RestLogger: LogHandler {
         data["debugFile"] = file
         data["debugFunction"] = function
         data["debugLine"] = String(line)
+        for (key, value) in metadata ?? [:] {
+            data[key] = value.description
+        }
 
         let newLog = LogModel(timestamp: Date(),
                               level: level,
