@@ -31,8 +31,8 @@ public struct RestLogger: LogHandler {
     private let filename = "logs.json"
     private let logs: Atomic<[LogModel]>
 
-    public var metadata: Logger.Metadata
-    public var logLevel: Logger.Level
+    public var metadata: Logger.Metadata = [:]
+    public var logLevel: Logger.Level = .warning
 
     public init(endpoint: URL, username: String, password: String, shouldSend: (() -> Bool)? = nil) {
         self.endpoint = endpoint
@@ -63,12 +63,12 @@ public struct RestLogger: LogHandler {
 
         let newLog = LogModel(timestamp: Date(),
                               level: level,
-                              message: message,
-                              environment: Logger.environment,
-                              os_version: Logger.osVersion,
-                              device: Logger.device,
-                              version: Logger.version,
-                              build: Logger.build,
+                              message: message.description,
+                              environment: RestLogger.environment,
+                              os_version: RestLogger.osVersion,
+                              device: RestLogger.device,
+                              version: RestLogger.version,
+                              build: RestLogger.build,
                               data: data)
         logs.mutate { $0.append(newLog) }
     }
@@ -122,7 +122,7 @@ public struct RestLogger: LogHandler {
         }
     }
 
-    public subscript(metadataKey _: String) -> Logger.Metadata.Value? {
+    public subscript(metadataKey metadataKey: String) -> Logger.Metadata.Value? {
         get {
             return self.metadata[metadataKey]
         }

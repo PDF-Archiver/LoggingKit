@@ -5,16 +5,16 @@
         "package": "LogModel",
         "repositoryURL": "https://github.com/PDF-Archiver/LogModel.git",
         "state": {
-          "branch": null,
-          "revision": "2274d4044dbae36cfaa7b95b04069db7ef4601a7",
-          "version": "0.0.1"
+          "branch": "master",
+          "revision": "f0fdc4a22452e8f6c9a77bab0be35caf655971a7",
+          "version": null
         }
       },
       {
         "package": "swift-log",
         "repositoryURL": "https://github.com/apple/swift-log.git",
         "state": {
-          "branch": "master",
+          "branch": null,
           "revision": "77b2e836f1a2573a30911933a60a52543f693f39",
           "version": null
         }
