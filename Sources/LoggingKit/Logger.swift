@@ -8,8 +8,9 @@
 
 import UIKit
 import LogModel
+import Logging
 
-public struct Logger {
+public struct RestLogger: LogHandler {
 
     // Mark: - Environment
     private static let environment = AppEnvironment.get()
@@ -30,6 +31,9 @@ public struct Logger {
     private let filename = "logs.json"
     private let logs: Atomic<[LogModel]>
 
+    public var metadata: Logger.Metadata
+    public var logLevel: Logger.Level
+
     public init(endpoint: URL, username: String, password: String, shouldSend: (() -> Bool)? = nil) {
         self.endpoint = endpoint
         self.shouldSend = shouldSend
@@ -40,15 +44,22 @@ public struct Logger {
         // get saved logs
         let savedLogs = Storage.load(filename, from: .documents, as: [LogModel].self) ?? []
         logs = Atomic(savedLogs)
+
+        // setup metadata key
+        metadata["environment"] = .string(RestLogger.environment.rawValue)
+        metadata["osVersion"] = .string(RestLogger.osVersion)
+        metadata["device"] = .string(RestLogger.device)
+        metadata["version"] = .string(RestLogger.version)
+        metadata["build"] = .string(String(RestLogger.build))
     }
 
-    public func send(_ level: LoggerLevel, _ message: String, extra data: [String: String] = [:], file: String = #file, line: Int = #line, function: String = #function) {
+    public func log(level: Logger.Level, message: Logger.Message, metadata: Logger.Metadata? = nil, file: String = #file, function: String = #function, line: UInt = #line) {
         guard shouldSend?() ?? true else { return }
 
-        var data = data
+        var data = [String: String]()
         data["debugFile"] = file
-        data["debugLine"] = String(line)
         data["debugFunction"] = function
+        data["debugLine"] = String(line)
 
         let newLog = LogModel(timestamp: Date(),
                               level: level,
@@ -76,7 +87,7 @@ public struct Logger {
         }
 
         do {
-            let jsonData = try Logger.encoder.encode(logs)
+            let jsonData = try RestLogger.encoder.encode(logs)
 
             // create post request
             var request = URLRequest(url: endpoint)
@@ -108,6 +119,15 @@ public struct Logger {
             // save logs on device, because something went wrong while sending
             Storage.save(logs, to: .documents, as: filename)
             self.logs.mutate { $0.append(contentsOf: logs) }
+        }
+    }
+
+    public subscript(metadataKey _: String) -> Logger.Metadata.Value? {
+        get {
+            return self.metadata[metadataKey]
+        }
+        set {
+            self.metadata[metadataKey] = newValue
         }
     }
 }
