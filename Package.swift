@@ -17,7 +17,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/PDF-Archiver/LogModel.git", .branch("master")),
-        .package(url: "https://github.com/apple/swift-log.git", .revision("77b2e836f1a2573a30911933a60a52543f693f39")),
+        .package(url: "https://github.com/apple/swift-log.git", .branch("master")),
 //        .package(url: "https://github.com/PDF-Archiver/LogModel.git", from: "0.0.3"),
 //        .package(url: "https://github.com/apple/swift-log.git", from: "1.1.1")
     ],
