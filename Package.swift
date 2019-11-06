@@ -16,10 +16,8 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/PDF-Archiver/LogModel.git", .branch("master")),
-        .package(url: "https://github.com/apple/swift-log.git", .branch("master")),
-//        .package(url: "https://github.com/PDF-Archiver/LogModel.git", from: "0.0.3"),
-//        .package(url: "https://github.com/apple/swift-log.git", from: "1.1.1")
+        .package(url: "https://github.com/PDF-Archiver/LogModel.git", from: "0.0.4"),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.2.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
