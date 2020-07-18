@@ -6,7 +6,12 @@
 //  Copyright © 2019 Julian Kahnert. All rights reserved.
 //
 
+#if os(macOS)
+import AppKit
+#else
 import UIKit
+#endif
+import Foundation
 import LogModel
 import Logging
 
@@ -14,7 +19,13 @@ public struct RestLogger: LogHandler {
 
     // Mark: - Environment
     private static let environment = AppEnvironment.get()
-    private static let osVersion = UIDevice().systemVersion
+    private static let osVersion: String = {
+        #if os(macOS)
+        return ProcessInfo.processInfo.operatingSystemVersionString
+        #else
+        return UIDevice().systemVersion
+        #endif
+    }()
     private static let device = AppEnvironment.getModel()
     private static let version = AppEnvironment.getVersion()
     private static let build = AppEnvironment.getBuildNumber()
@@ -32,6 +43,8 @@ public struct RestLogger: LogHandler {
     private let logs: Atomic<[LogModel]>
 
     public var metadata: Logger.Metadata = [:]
+    
+    /// Log messages greater or equal this level will be sent.
     public var logLevel: Logger.Level = .warning
 
     public init(endpoint: URL, username: String, password: String, shouldSend: (() -> Bool)? = nil) {
@@ -54,7 +67,8 @@ public struct RestLogger: LogHandler {
     }
 
     public func log(level: Logger.Level, message: Logger.Message, metadata: Logger.Metadata? = nil, file: String = #file, function: String = #function, line: UInt = #line) {
-        guard shouldSend?() ?? true else { return }
+        guard level >= logLevel,
+            shouldSend?() ?? true else { return }
 
         var data = [String: String]()
         data["debugFile"] = file
