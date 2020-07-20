@@ -129,6 +129,12 @@ public struct RestLogger: LogHandler {
                 // remove file after successful sending
                 Storage.remove(self.filename, from: .documents)
             }
+            
+            // Source: https://developer.apple.com/documentation/foundation/url_loading_system/downloading_files_in_the_background
+            task.earliestBeginDate = Date()
+            task.countOfBytesClientExpectsToSend = Int64(jsonData.count + 200)
+            task.countOfBytesClientExpectsToReceive = 200
+            
             task.resume()
 
         } catch {
